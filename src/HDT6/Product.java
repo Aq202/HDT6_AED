@@ -35,6 +35,11 @@ public class Product {
 		amount++;
 	}
 	
+	public void decreaseAmount() {
+		amount--;
+		if(amount < 0) amount = 0;
+	}
+	
 	public int getAmount() {
 		return amount;
 	}
@@ -45,8 +50,7 @@ public class Product {
 		if (object instanceof Product) {
 
 			Product product = (Product) object;
-			if (product.getCategory().equalsIgnoreCase(category)
-					&& product.getDescription().equalsIgnoreCase(description))
+			if (product.getDescription().toLowerCase().equalsIgnoreCase(description.toLowerCase()))
 				return true;
 
 		}

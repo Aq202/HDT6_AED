@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 
 import HDT6.MarketController;
-import HDT6.NonExistentCategoryException;
+import HDT6.NonExistentException;
 
 class MarketTests {
 	
@@ -25,16 +25,26 @@ class MarketTests {
 	}
 
 	@Test
-	void test() {
+	void newProductTest() {
 		
-		String rawString = "Lácteos";
-		ByteBuffer buffer = StandardCharsets.UTF_8.encode(rawString); 
+		try {
 
-		String utf8EncodedString = StandardCharsets.UTF_8.decode(buffer).toString();
-		System.out.println("Lácteos");
-		System.out.println(utf8EncodedString);
-
-		assertEquals(rawString, utf8EncodedString);
+		} catch (Exception e) {
+			fail(e);
+		} 
+	}
+	
+	@Test
+	void getProductCategory() {
+		
+		try {
+			market.addProductToUserCollection("Lácteos", "Leche deslactosada");
+			market.getUserCollectionProducts();
+		} catch (NonExistentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }

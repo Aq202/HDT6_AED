@@ -43,13 +43,12 @@ public class FileController {
 	}
 
 	/**
-	 * Permite crear(si no existe) el archivo de almacenamiento y sobreescribir su
-	 * contenido.
+	 * Permite anadir una nueva linea al archivo
 	 * 
 	 * @param text. Contenido del archivo
 	 * @throws IOException
 	 */
-	public static void writeFile(String text) throws IOException {
+	public static void writeLine(String text) throws IOException {
 
 		File file = new File(PATH);
 		if (!file.exists()) {
