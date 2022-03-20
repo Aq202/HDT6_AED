@@ -9,7 +9,13 @@ import java.util.TreeMap;
 public class MapFactory {
 
 
-	public static Map<String,ArrayList> getMap(int type) throws IllegalArgumentException {
+	/**
+	 * 
+	 * @param type
+	 * @return
+	 * @throws IllegalArgumentException 
+	 */
+	public static Map<String,ArrayList<Product>> getMap(int type) throws IllegalArgumentException {
 
 		switch (type) {
 		case 1:
