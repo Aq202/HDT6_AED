@@ -3,8 +3,23 @@ package HDT6;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * Clase Main
+ * @author diego
+ * Programado el 20/03/2022
+ */
+
+
 public class Main {
 
+	/**
+	 * Metodo que se encarga de solicitar y validar un numero entero.
+	 * @param sc Scanner
+	 * @param message
+	 * @param absoluteValues
+	 * @param validValues
+	 * @return int.
+	 */
 	private static int getValidInt(Scanner sc, String message, boolean absoluteValues, Integer... validValues) {
 
 		while (true) {
@@ -27,11 +42,21 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Se encarga de solicitar al usuario que ingrese un dato.
+	 * @param sc Scanner
+	 * @param message
+	 * @return String.
+	 */
 	private static String getString(Scanner sc, String message) {
 		System.out.println(message);
 		return sc.nextLine();
 	}
 
+	/**
+	 * Metodo main
+	 * @param args
+	 */
 	public static void main(String[] args) {
 
 		Scanner sc = new Scanner(System.in);

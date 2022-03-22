@@ -11,6 +11,14 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+
+/**
+ * Clase FileController
+ * @author diego
+ * Programado el 20/03/2022
+ */
+
+
 public class FileController {
 	public static final String PATH = System.getProperty("user.dir") + "\\ListadoProducto.txt";
 

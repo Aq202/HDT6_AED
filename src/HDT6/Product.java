@@ -1,7 +1,11 @@
 package HDT6;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+/**
+ * Clase Product
+ * @author diego
+ * Programado el 20/03/2022
+ */
+
 
 public class Product {
 
@@ -13,32 +17,50 @@ public class Product {
 		setDescription(description);
 	}
 
+	/**
+	 * Metodo get para la propiedad category.
+	 * @return String
+	 */
 	public String getCategory() {
 		return category;
 	}
-
+	
+	/**
+	 * Metodo set para category
+	 * @param category
+	 */
 	public void setCategory(String category) {
 		this.category = category != null ? category.trim() : null;
 	}
 
+	/**
+	 * Metodo get para la propiedad description
+	 * @return String
+	 */
 	public String getDescription() {
 		return description;
 	}
 
+	/**
+	 * Metodo set para description
+	 * @param description
+	 */
 	public void setDescription(String description) {
 		this.description = description != null ? description.trim() : null;
 	}
 
+	/**
+	 * Incrementa la cantidad de productos seleccionados.
+	 */
 	public void increaseAmount() {
 		amount++;
 	}
 
-	public void decreaseAmount() {
-		amount--;
-		if (amount < 0)
-			amount = 0;
-	}
 
+	/**
+	 * Metodo get para amount
+	 * @return Amount.
+	 */
 	public int getAmount() {
 		return amount;
 	}

@@ -6,13 +6,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Clase MapFactory
+ * @author diego
+ * Programado el 20/03/2022
+ */
+
+
 public class MapFactory {
 
 
 	/**
-	 * 
+	 * Metodo factory
 	 * @param type
-	 * @return
+	 * @return Map
 	 * @throws IllegalArgumentException 
 	 */
 	public static Map<String,Product> getMap(int type) throws IllegalArgumentException {

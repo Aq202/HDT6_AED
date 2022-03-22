@@ -6,6 +6,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
+/**
+ * Clase MarketController
+ * @author diego
+ * Programado el 20/03/2022
+ */
+
+
 public class MarketController {
 
 	private final ArrayList<String> validCategories;
@@ -21,6 +28,12 @@ public class MarketController {
 
 	}
 
+	/**
+	 * Se encarga de obtener la informacion del archivo e ingresarlo al programa.
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws NonExistentException
+	 */
 	private void fillProductData() throws FileNotFoundException, IOException, NonExistentException {
 
 		String[] productsRow = FileController.readFile();
@@ -35,6 +48,13 @@ public class MarketController {
 		}
 	}
 
+	/**
+	 * Se encarga de agregar productos nuevos a un hash deteminado
+	 * @param map
+	 * @param category
+	 * @param description
+	 * @throws NonExistentException
+	 */
 	private void addProductToMap(Map<String, Product> map, String category, String description)
 			throws NonExistentException {
 
@@ -60,6 +80,12 @@ public class MarketController {
 
 	}
 
+	/**
+	 * Se encarga de anadir un nuevo producto a la coleccion del usuario.
+	 * @param category
+	 * @param product
+	 * @throws NonExistentException
+	 */
 	public void addProductToUserCollection(String category, String product) throws NonExistentException {
 		
 		category = category.trim().toLowerCase();
@@ -76,6 +102,14 @@ public class MarketController {
 
 	}
 
+	/**
+	 * Se encarga de obtener el objeto de un producto con categoria y descripcion determinado.
+	 * @param map
+	 * @param category
+	 * @param product
+	 * @return Product
+	 * @throws NonExistentException
+	 */
 	private Product getProduct(Map<String, Product> map, String category, String product) throws NonExistentException {
 
 		validateCategory(category);
@@ -92,11 +126,21 @@ public class MarketController {
 		return null; // no existe
 	}
 
+	/**
+	 * Se encarga de validar si una categoria es considerada como valida.
+	 * @param category
+	 * @throws NonExistentException
+	 */
 	private void validateCategory(String category) throws NonExistentException {
 		if (!validCategories.contains(category.toLowerCase()))
 			throw new NonExistentException("La categoria " + category + " no existe.\nPrueba con: " + getCategories());
 	}
 
+	/**
+	 * Se encarg de obtener la categoria correspondiente a un producto.
+	 * @param product
+	 * @return
+	 */
 	public String getProductCategory(String product) {
 
 		for (Product productObj : productsMap.values()) {
@@ -109,6 +153,10 @@ public class MarketController {
 
 	}
 
+	/**
+	 * Se encarga de obtener todos los productos de la coleccion del usuario.
+	 * @return String
+	 */
 	public String getUserCollectionProducts() {
 
 		String result = "";
@@ -127,6 +175,10 @@ public class MarketController {
 
 	}
 
+	/**
+	 * Se encarga de obtener todos los productos de la coleccion del usuario ordenados por tipo.
+	 * @return String.
+	 */
 	public String getUserCollectionProductsByType() {
 
 		String result = "";
@@ -158,6 +210,10 @@ public class MarketController {
 
 	}
 
+	/**
+	 * Se encarga de obtener todos los productos del inventario.
+	 * @return String.
+	 */
 	public String getFullInventory() {
 
 		String result = "";
@@ -175,6 +231,10 @@ public class MarketController {
 
 	}
 
+	/**
+	 * Retorna las categorias disponbles.
+	 * @return
+	 */
 	public String getCategories() {
 		String result = "";
 		for (String category : validCategories) {
@@ -183,6 +243,11 @@ public class MarketController {
 		return result;
 	}
 
+	/**
+	 * Se encarga de obtener los productos de una categoria especifica.
+	 * @param category
+	 * @return
+	 */
 	public String getCategoryProducts(String category) {
 		String result = "";
 		System.out.println(category);
@@ -196,10 +261,20 @@ public class MarketController {
 		return result;
 	}
 	
+	/**
+	 * Retorna la llave en formato requerido.
+	 * @param category
+	 * @param productCont
+	 * @return
+	 */
 	public String getKey(String category, int productCont) {
 		return category.toLowerCase().trim() + String.valueOf(productCont);
 	}
 
+	/**
+	 * Obtiene todos los productos del inventario ordenados por tipo.
+	 * @return
+	 */
 	public String getFullInventoryByType() {
 
 		String result = "";
@@ -229,8 +304,5 @@ public class MarketController {
 
 	}
 
-	public Map<String, Product> getMap() {
-		return productsMap;
-	}
 
 }
