@@ -15,7 +15,7 @@ public class MapFactory {
 	 * @return
 	 * @throws IllegalArgumentException 
 	 */
-	public static Map<String,ArrayList<Product>> getMap(int type) throws IllegalArgumentException {
+	public static Map<String,Product> getMap(int type) throws IllegalArgumentException {
 
 		switch (type) {
 		case 1:

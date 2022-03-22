@@ -52,7 +52,7 @@ public class Main {
 				try {
 
 					int menuOption = getValidInt(sc, """
-							\nSelecciona la implementacion de Map a utilizar:
+							\nSelecciona una opcion:
 								1. Agregar producto a la coleccion.
 								2. Mostrar la categoria de un producto.
 								3. Mostrar productos en la coleccion.

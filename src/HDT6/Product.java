@@ -28,18 +28,17 @@ public class Product {
 	public void setDescription(String description) {
 		this.description = description != null ? description.trim() : null;
 	}
-	
 
-	
 	public void increaseAmount() {
 		amount++;
 	}
-	
+
 	public void decreaseAmount() {
 		amount--;
-		if(amount < 0) amount = 0;
+		if (amount < 0)
+			amount = 0;
 	}
-	
+
 	public int getAmount() {
 		return amount;
 	}
@@ -50,7 +49,8 @@ public class Product {
 		if (object instanceof Product) {
 
 			Product product = (Product) object;
-			if (product.getDescription().toLowerCase().equalsIgnoreCase(description.toLowerCase()))
+			if (product.getDescription().equalsIgnoreCase(description)
+					&& product.getCategory().equalsIgnoreCase(category))
 				return true;
 
 		}

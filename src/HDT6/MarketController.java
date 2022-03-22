@@ -3,15 +3,18 @@ package HDT6;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 public class MarketController {
 
-	private Map<String, ArrayList<Product>> productsMap, userCollectionMap;
+	private final ArrayList<String> validCategories;
+	private Map<String, Product> productsMap, userCollectionMap;
 
 	public MarketController(int mapType)
 			throws IllegalArgumentException, FileNotFoundException, IOException, NonExistentException {
 
+		validCategories = new ArrayList<>();
 		productsMap = MapFactory.getMap(mapType);
 		userCollectionMap = MapFactory.getMap(mapType);
 		fillProductData();
@@ -26,28 +29,41 @@ public class MarketController {
 
 			// category, description
 			String[] productData = product.split("\\|");
+			if (!validCategories.contains(productData[0].toLowerCase().trim()))
+				validCategories.add(productData[0].toLowerCase().trim()); // anadir categoria valida
 			addProductToMap(productsMap, productData[0].trim(), productData[1].trim());
 		}
 	}
 
-	private void addProductToMap(Map<String, ArrayList<Product>> map, String category, String description)
+	private void addProductToMap(Map<String, Product> map, String category, String description)
 			throws NonExistentException {
 
-		if (!map.containsKey(category.toLowerCase()))
-			map.put(category.toLowerCase(), new ArrayList<>());
-
-		ArrayList<Product> list = map.get(category.toLowerCase());
 		Product product = new Product(category, description);
-		int index = list.indexOf(product);
 
-		if (index >= 0)
-			list.get(index).increaseAmount(); // incrementar cantidad del producto
-		else
-			list.add(product); // nuevo producto
+		// si el producto no existe, agregarlo
+		if (!map.containsValue(product)) {
+
+			int cont = 0;
+			while (true) {
+
+				if (!map.containsKey(getKey(category, cont))) {
+					map.put(getKey(category, cont), product);
+					break;
+				} else
+					cont++;
+
+			}
+		} else { // si existe, aumentar cantidad
+			Product p = getProduct(map, category, description);
+			if(p != null) p.increaseAmount();
+		}
 
 	}
 
 	public void addProductToUserCollection(String category, String product) throws NonExistentException {
+		
+		category = category.trim().toLowerCase();
+		product = product.trim().toLowerCase();
 
 		Product productObj = getProduct(productsMap, category, product);
 
@@ -60,33 +76,36 @@ public class MarketController {
 
 	}
 
-	private Product getProduct(Map<String, ArrayList<Product>> map, String category, String product)
-			throws NonExistentException {
+	private Product getProduct(Map<String, Product> map, String category, String product) throws NonExistentException {
 
-		if (!productsMap.containsKey(category.toLowerCase()))
-			throw new NonExistentException("La categoria " + category + " no existe.\nPrueba con: "+getCategories());
+		validateCategory(category);
+		int cont = 0;
 
-		var productList = productsMap.get(category.toLowerCase());
-		int index = productList.indexOf(new Product(null, product));
+		// buscar objeto del producto
+		while (map.containsKey(getKey(category, cont))) {
+			Product productObj = map.get(category.toLowerCase() + String.valueOf(cont));
+			if (productObj.getDescription().equalsIgnoreCase(product))
+				return productObj;
+			cont++;
+		}
 
-		if (index < 0)
-			return null;
+		return null; // no existe
+	}
 
-		return productList.get(index);
+	private void validateCategory(String category) throws NonExistentException {
+		if (!validCategories.contains(category.toLowerCase()))
+			throw new NonExistentException("La categoria " + category + " no existe.\nPrueba con: " + getCategories());
 	}
 
 	public String getProductCategory(String product) {
 
-		for (String category : productsMap.keySet()) {
-			var list = productsMap.get(category);
-			int index = list.indexOf(new Product(null, product));
+		for (Product productObj : productsMap.values()) {
 
-			if (index >= 0)
-				return list.get(index).getCategory();
-
+			if (productObj.getDescription().equalsIgnoreCase(product))
+				return productObj.getCategory();
 		}
 
-		return null;
+		return null; // no existe
 
 	}
 
@@ -94,16 +113,12 @@ public class MarketController {
 
 		String result = "";
 		int cont = 0;
-		for (String category : userCollectionMap.keySet()) {
-			var list = userCollectionMap.get(category);
+		for (Product product : userCollectionMap.values()) {
+			cont++;
+			result += String.format(
+					"Producto %s:\n\t- Categoria: %s\n\t- Descripcion: %s\n\t- Cantidad seleccionada: %s\n\n", cont,
+					product.getCategory(), product.getDescription(), product.getAmount());
 
-			for (Product product : list) {
-				cont++;
-				result += String.format(
-						"Producto %s:\n\t- Categoria: %s\n\t- Descripcion: %s\n\t- Cantidad disponible: %s\n\n", cont,
-						product.getCategory(), product.getDescription(), product.getAmount());
-
-			}
 		}
 
 		if (cont == 0)
@@ -116,15 +131,23 @@ public class MarketController {
 
 		String result = "";
 		int category_cont = 0;
-		for (String category : userCollectionMap.keySet()) {
+		for (String category : validCategories) {
+			
+			int product_cont = 0;
+			while (userCollectionMap.containsKey(getKey(category, product_cont))) {
+				
+				//titulo de categoria
+				if(product_cont == 0) {
+					category_cont++;
+					result += String.format("%s. %s\n\n", category_cont, category);
+					
+				}
 
-			category_cont++;
-			result += String.format("%s. %s\n\n", category_cont, category);
-			var list = userCollectionMap.get(category);
+				Product product = userCollectionMap.get(getKey(category, product_cont));
 
-			for (Product product : list) {
 				result += String.format("\t- Categoria: %s\n\t- Descripcion: %s\n\t- Cantidad disponible: %s\n\n",
 						product.getCategory(), product.getDescription(), product.getAmount());
+				product_cont++;
 
 			}
 		}
@@ -139,15 +162,11 @@ public class MarketController {
 
 		String result = "";
 		int cont = 0;
-		for (String category : productsMap.keySet()) {
-			var list = productsMap.get(category);
 
-			for (Product product : list) {
-				cont++;
-				result += String.format("Producto %s:\n\t- Categoria: %s\n\t- Descripcion: %s\n\n", cont,
-						product.getCategory(), product.getDescription());
-
-			}
+		for (Product product : productsMap.values()) {
+			cont++;
+			result += String.format("Producto %s:\n\t- Categoria: %s\n\t- Descripcion: %s\n\n", cont,
+					product.getCategory(), product.getDescription());
 		}
 
 		if (cont == 0)
@@ -158,7 +177,7 @@ public class MarketController {
 
 	public String getCategories() {
 		String result = "";
-		for (String category : productsMap.keySet()) {
+		for (String category : validCategories) {
 			result += category + ". ";
 		}
 		return result;
@@ -167,27 +186,41 @@ public class MarketController {
 	public String getCategoryProducts(String category) {
 		String result = "";
 		System.out.println(category);
-		for (Product product : productsMap.get(category.toLowerCase())) {
+		int product_cont = 0;
+		while (productsMap.containsKey(getKey(category, product_cont))) {
+
+			Product product = productsMap.get(getKey(category, product_cont));
 			result += product.getDescription() + ". ";
+			product_cont++;
 		}
 		return result;
+	}
+	
+	public String getKey(String category, int productCont) {
+		return category.toLowerCase().trim() + String.valueOf(productCont);
 	}
 
 	public String getFullInventoryByType() {
 
 		String result = "";
 		int category_cont = 0;
-		for (String category : productsMap.keySet()) {
+		for (String category : validCategories) {
 
 			category_cont++;
 			result += String.format("%s. %s\n\n", category_cont, category);
-			var list = productsMap.get(category);
 
-			for (Product product : list) {
-				result += String.format("\t- Categoria: %s\n\t- Descripcion: %s\n\n", product.getCategory(),
-						product.getDescription());
+			int product_cont = 0;
+			while (productsMap.containsKey(getKey(category, product_cont))) {
+
+				Product product = productsMap.get(getKey(category, product_cont));
+
+				result += String.format("\t- Categoria: %s\n\t- Descripcion: %s\n\n",
+						product.getCategory(), product.getDescription(), product.getAmount());
+				product_cont++;
 
 			}
+
+
 		}
 
 		if (category_cont == 0)
@@ -196,7 +229,7 @@ public class MarketController {
 
 	}
 
-	public Map<String, ArrayList<Product>> getMap() {
+	public Map<String, Product> getMap() {
 		return productsMap;
 	}
 
